@@ -8,12 +8,10 @@ function getValueAtObject(obj, key) {
   } else {
     if (Array.isArray(obj)) {
       console.error('🙅‍♀️ 배열을 넣으셨네요.');
-    } else if (typeof obj === 'string') {
-      console.error('🙅‍♀️ 문자를 넣으셨네요.');
-    } else if (typeof obj === 'number') {
-      console.error('🙅‍♀️ 숫자를 넣으셨네요.');
+    } else if (obj === null) {
+      console.error(`null은 객체가 아닙니다. 🙅‍♀️`);
     } else {
-      console.error('객체가 아닙니다. 🙅‍♀️');
+      console.error(`${typeof obj}은/는 객체가 아닙니다. 🙅‍♀️`);
     }
 
     return 'Error !';
@@ -52,6 +50,10 @@ console.log(getValueAtObject(person, 'country')); // Error !
 console.log(getValueAtObject(numbers, 'country')); // Error !
 console.log(getValueAtObject('안녕하세요', 'country')); // Error !
 console.log(getValueAtObject(12345, 'country')); // Error !
+console.log(getValueAtObject(12345n, 'country')); // Error !
+console.log(getValueAtObject(true, 'country')); // Error !
+console.log(getValueAtObject(undefined, 'country')); // Error !
+console.log(getValueAtObject(null, 'country')); // Error !
 
 console.log('--------------------------------');
 console.log(getNumberAtArray(numbers, 2)); // 30
