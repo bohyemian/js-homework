@@ -1,8 +1,9 @@
 function getValueAtObject(obj, key) {
-  if (obj instanceof Object && !Array.isArray(obj)) {
+  if (obj instanceof Object && !Array.isArray(obj) && obj !== null) {
     if (Object.hasOwn(obj, key)) {
       return obj[key];
     } else {
+      console.error(`객체에 key ${key}가/이 없습니다. 🙅‍♀️`, obj);
       return 'Error !';
     }
   } else {
