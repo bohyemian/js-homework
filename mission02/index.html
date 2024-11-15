@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>네이버 - 로그인</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <script src="./js/main.js" defer></script>
+</head>
+
+<body>
+
+  <h1 class="logo">
+    <a href="https://www.naver.com/" class="naver-home-link">
+      <img src="./images/logo.png" alt="네이버" srcset="./images/logo.svg" class="responsive-svg" />
+    </a>
+  </h1>
+
+  <form action="URL" class="login-form" method="POST">
+    <fieldset>
+      <legend class="a11y">로그인 폼</legend>
+      <div class="login-form-container">
+        <div class="user-email">
+          <label for="userEmail" class="a11y">아이디</label>
+          <input type="email" class="user-email-input" id="userEmail" name="userEmail" placeholder="아이디(이메일)" required
+            aria-invalid="false" aria-describedby="userEmailError" aria-live="assertive" />
+          <span class="error-message" id="userEmailError">아이디는 이메일 형식으로 입력해주세요.</span>
+        </div>
+        <div class="user-password">
+          <label for="userPassword" class="a11y">비밀번호</label>
+          <input type="password" class="user-password-input" id="userPassword" name="userPassword" placeholder="비밀번호"
+            required aria-invalid="false" aria-describedby="userPasswordError" aria-live="polite" />
+          <span class="error-message" id="userPasswordError">비밀번호는 특수문자 포함 6자리 이상 입력해주세요.</span>
+        </div>
+        <div class="login-state-ip-security-checkbox-wrapper">
+          <div class="login-state">
+            <input type="checkbox" class="login-state-checkbox" id="loginState" name="state" />
+            <label for="loginState" class="login-state-label">
+              <span class="icon-check"></span>로그인 상태 유지
+            </label>
+          </div>
+          <div class="ip-security-wrapper">
+            <a href="./ip_security.html" rel="noopener noreferrer" title="IP 보안에 대해" class="ip-security-link"
+              target="_blank">IP보안</a>
+            <div class="ip-security">
+              <input type="checkbox" class="ip-security-checkbox" name="ip" id="loginIp" />
+              <label for="loginIp" class="ip-security-label" aria-label="IP 보안설정"></label>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn-login">로그인</button>
+      </div>
+    </fieldset>
+  </form>
+
+</body>
+
+</html>
