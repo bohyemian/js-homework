@@ -48,8 +48,8 @@ function setInputValidation() {
 
   function validation(e) {
     const target = e.target;
-    const { value, type: inputType } = target;
-    const input = inputForm[inputType];
+    const { value, type } = target;
+    const input = inputForm[type];
 
     input.value = value;
     input.isValid = input.validation(input.value);
@@ -66,27 +66,45 @@ function setInputValidation() {
     return { emailValid, pwValid };
   }
 
-  return { validation, getValid };
+  function acountValueMath(callback) {
+    setTimeout(() => {
+      return callback(inputForm.email.value === user.id && inputForm.password.value === user.pw);
+    }, parseInt(Math.random() * 1000));
+  }
+
+  return { validation, getValid, acountValueMath };
 }
 
-function submitForm(e) {
+function formValidation(e) {
   const { emailValid, pwValid } = getValid();
 
-  if (!emailValid || !pwValid) {
-    if (!emailValid) {
-      inputEmail.classList.add('is--invalid');
-    }
-    if (!pwValid) {
-      inputPassword.classList.add('is--invalid');
-    }
+  e.preventDefault();
+
+  if (!emailValid) {
+    inputEmail.classList.add('is--invalid');
+  }
+  if (!pwValid) {
+    inputPassword.classList.add('is--invalid');
+  }
+
+  if (emailValid && pwValid) {
+    acountValueMath(success);
+  }
+}
+
+function success(result) {
+  if (result) {
+    window.location.href = 'welcome.html';
+  } else {
+    alert('아이디와 비밀번호를 확인해주세요.');
   }
 }
 
 const inputEmail = getNode('#userEmail');
 const inputPassword = getNode('#userPassword');
 const submitBtn = getNode('button.btn-login[type=submit]');
-const { getValid, validation } = setInputValidation();
+const { getValid, validation, acountValueMath } = setInputValidation();
 
 inputEmail.addEventListener('input', validation);
 inputPassword.addEventListener('input', validation);
-submitBtn.addEventListener('click', submitForm);
+submitBtn.addEventListener('click', formValidation);
