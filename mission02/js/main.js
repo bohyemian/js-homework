@@ -37,28 +37,25 @@ function setInputValidation() {
     email: {
       value: null,
       isValid: false,
-      inputValid: emailReg,
+      validation: emailReg,
     },
     password: {
       value: null,
       isValid: false,
-      inputValid: pwReg,
+      validation: pwReg,
     },
   };
 
-  function checkValid(inputType) {
-    return inputForm[inputType].inputValid(inputForm[inputType].value);
-  }
-
   function validation(e) {
-    const input = e.target;
-    const { value, type: inputType } = input;
+    const target = e.target;
+    const { value, type: inputType } = target;
+    const input = inputForm[inputType];
 
-    inputForm[inputType].value = value;
-    inputForm[inputType].isValid = checkValid(inputType);
+    input.value = value;
+    input.isValid = input.validation(input.value);
 
-    if (inputForm[inputType].isValid) {
-      input.classList.remove('is--invalid');
+    if (input.isValid) {
+      target.classList.remove('is--invalid');
     }
   }
 
