@@ -23,7 +23,7 @@ function pwReg(text) {
   return re.test(String(text).toLowerCase());
 }
 
-function getNode(node, context = document) {
+function getNode(node) {
   if (typeof node === 'string') node = document.querySelector(node);
   if (node.nodeType === 1) {
     return node;
@@ -34,27 +34,55 @@ function getNode(node, context = document) {
 
 function setInputValidation() {
   let value;
+  let isValid = false;
 
-  function validation(callback) {
+  function getCallback(input) {
+    switch (input) {
+      case 'email':
+        return emailReg;
+      case 'password':
+        return pwReg;
+    }
+  }
+
+  function checkValid(callback) {
     return callback(value);
   }
 
-  function getValue(e) {
+  function validation(e) {
     value = e.target.value;
+    isValid = checkValid(getCallback(e.target.type));
+
+    if (isValid) {
+      e.target.classList.remove('is--invalid');
+    }
   }
 
-  return { validation, getValue };
+  function getValid() {
+    return isValid;
+  }
+
+  return { validation, getValid };
+}
+
+function submitForm(e) {
+  if (!getEmailValid() || !getPwValid()) {
+    if (!getEmailValid()) {
+      inputEmail.classList.add('is--invalid');
+    }
+
+    if (!getPwValid()) {
+      inputPassword.classList.add('is--invalid');
+    }
+  }
 }
 
 const inputEmail = getNode('#userEmail');
 const inputPassword = getNode('#userPassword');
 const submitBtn = getNode('button.btn-login[type=submit]');
-const { validation: checkEmailValid, getValue: getEmailValue } = setInputValidation();
-const { validation: checkPwValid, getValue: getPwValue } = setInputValidation();
+const { getValid: getEmailValid, validation: getEmailValue } = setInputValidation();
+const { getValid: getPwValid, validation: getPwValue } = setInputValidation();
 
 inputEmail.addEventListener('input', getEmailValue);
 inputPassword.addEventListener('input', getPwValue);
-
-submitBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-});
+submitBtn.addEventListener('click', submitForm);
