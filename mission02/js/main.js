@@ -33,45 +33,53 @@ function getNode(node) {
 }
 
 function setInputValidation() {
-  let value;
-  let isValid = false;
+  const inputForm = {
+    email: {
+      value: null,
+      isValid: false,
+      inputValid: emailReg,
+    },
+    password: {
+      value: null,
+      isValid: false,
+      inputValid: pwReg,
+    },
+  };
 
-  function getCallback(input) {
-    switch (input) {
-      case 'email':
-        return emailReg;
-      case 'password':
-        return pwReg;
-    }
-  }
-
-  function checkValid(callback) {
-    return callback(value);
+  function checkValid(inputType) {
+    return inputForm[inputType].inputValid(inputForm[inputType].value);
   }
 
   function validation(e) {
-    value = e.target.value;
-    isValid = checkValid(getCallback(e.target.type));
+    const input = e.target;
+    const { value, type: inputType } = input;
 
-    if (isValid) {
-      e.target.classList.remove('is--invalid');
+    inputForm[inputType].value = value;
+    inputForm[inputType].isValid = checkValid(inputType);
+
+    if (inputForm[inputType].isValid) {
+      input.classList.remove('is--invalid');
     }
   }
 
   function getValid() {
-    return isValid;
+    const { isValid: emailValid } = inputForm.email;
+    const { isValid: pwValid } = inputForm.password;
+
+    return { emailValid, pwValid };
   }
 
   return { validation, getValid };
 }
 
 function submitForm(e) {
-  if (!getEmailValid() || !getPwValid()) {
-    if (!getEmailValid()) {
+  const { emailValid, pwValid } = getValid();
+
+  if (!emailValid || !pwValid) {
+    if (!emailValid) {
       inputEmail.classList.add('is--invalid');
     }
-
-    if (!getPwValid()) {
+    if (!pwValid) {
       inputPassword.classList.add('is--invalid');
     }
   }
@@ -80,9 +88,8 @@ function submitForm(e) {
 const inputEmail = getNode('#userEmail');
 const inputPassword = getNode('#userPassword');
 const submitBtn = getNode('button.btn-login[type=submit]');
-const { getValid: getEmailValid, validation: getEmailValue } = setInputValidation();
-const { getValid: getPwValid, validation: getPwValue } = setInputValidation();
+const { getValid, validation } = setInputValidation();
 
-inputEmail.addEventListener('input', getEmailValue);
-inputPassword.addEventListener('input', getPwValue);
+inputEmail.addEventListener('input', validation);
+inputPassword.addEventListener('input', validation);
 submitBtn.addEventListener('click', submitForm);
