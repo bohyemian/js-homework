@@ -188,7 +188,7 @@ function success(result) {
 
 입력 폼이 더 많고 중복됐을 때 값을 어떻게 처리할 지에 대한 부분도 수정이 필요해서, 로그인 화면을 위한 하드코딩인 느낌도 들었다.
 
-<img src="https://bohyemian.github.io/js-homework/mission02/README/misson2.jpg">
+<img src="https://bohyemian.github.io/js-homework/mission02/README/misson2.jpg" width="680">
 
-코드를 작성하기 전에 머리속에 중구난방 떠오르는 것들을 정리해보고 나름대로 설계를 하고 그것을 코드로 옮기는 작업이 도움이 많이 되었다.
+코드를 작성하기 전에 머리속에 중구난방 떠오르는 것들을 정리해보고 나름대로 설계를 하고 그것을 코드로 옮기는 작업이 도움이 많이 되었다.  
 계획한 대로 구현이 되었을 때 느꼈던 성취감도 기억에 남는다. 텅텅 빈 백지를 받았을 때의 막막함을 어떻게 채워나가야 하는지 조금은 연습이 된 것 같다.
