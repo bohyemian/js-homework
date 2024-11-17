@@ -2,16 +2,140 @@
 
 ---
 
-로그인과 비밀번호를 정확히 입력했을 때 welcome 페이지로 넘어갈 수 있도록 코드 로직을 작성합니다.
-
+아이디와 비밀번호를 정확히 입력했을 때 welcome 페이지로 넘어갈 수 있도록 코드 로직을 작성합니다
 
 ---
+
 - [x] 재사용 가능한 함수를 분리하고 함수를 중심으로 설계하는 방법에 대해 학습합니다.
 
+## 코드 설계
 
+요구사항에서 `아이디와 비밀번호를 정확히 입력했을 때`를 구현하는 것에서 시작했다.
+`입력했을 때` 입력한 값과 그 값이 `값의 조건 범위` 안에 드는지 확인한 결과를 담을 변수가 필요하다는 생각을 했다.  
+<u>입력할 때마다</u> 변하는 값을 가져오기 위해 input 요소의 `input event`에 함수를 바인딩했다.
 
+EventTarget의 `addEventListener()` 메서드의 두번째 인자 `listener`에 이벤트 객체가 넘어오기 때문에 **이벤트 객체의 타겟의 값**을 가져올 수 있다.
 
+값을 가져와서 변수에 저장하는 것까지는 구현을 했지만 `addEventListener()`는 값을 반환하지 않는다. 로그인 버튼을 눌렀을 때 저장된 input의 값과 user의 값을 비교해야 하는데, `addEventListener()`에 바인딩 된 함수가 종료되면 함수의 컨텍스트가 사라지기 때문에 내부에 저장된 값을 유지하기 위해 수정이 필요했다.
 
+클로저의 개념을 떠올렸고, 처음엔 이벤트 핸들러에서 함수를 return 시켜봤는데 undefined가 반환되어 MDN 문서를 찾아보니 `addEventListener()` 메서드는 반환값이 없었다.
+그렇다면 이미 <u>클로저가 형성</u>되어 함수 내부의 값을 알 수 있는 함수가 이벤트 핸들러가 되어야 했다.
 
+### 아이디와 비밀번호 각각의 렉시컬 환경을 구성하기 위한 클로저 형성
 
+```javascript
+function setInputValidation() {
+  let value;
 
+  function getValue(e) {
+    value = e.target.value;
+  }
+
+  return getValue;
+}
+```
+
+[코드 히스토리](https://github.com/bohyemian/js-homework/blob/2be872611f0b74d2aa907c933c22b737b7c1a571/mission02/js/main.js)
+
+위와 같은 코드로 클로저를 형성시킨 후 return 된 함수 getValue를 이벤트 핸들러로 실행하였다.
+
+```javascript
+const { validation: checkEmailValid, getValue: getEmailValue } = setInputValidation();
+const { validation: checkPwValid, getValue: getPwValue } = setInputValidation();
+
+inputEmail.addEventListener('input', getEmailValue);
+inputPassword.addEventListener('input', getPwValue);
+```
+
+각각의 값을 기억하는 환경은 만들었지만 입력 폼이 아이디와 비밀번호 두개인데도 코드가 길어졌고, 값의 validation 함수만 다를 뿐 나머지는 **중복**되고 있어서 매번 반환받은 함수의 이름을 다르게 지어야 하는 것이 비효율적이라고 느껴졌다.  
+로그인 화면은 입력 폼이 몇개 안되지만 회원가입 화면같이 입력 폼이 훨씬 많아지면 매번 이름을 지어야 하고 코드 작성 시간이 길어질 것이라고 생각되어 수정이 필요해 보였다.
+
+```javascript
+function getCallback(input) {
+  switch (input) {
+    case 'email':
+      return emailReg;
+    case 'password':
+      return pwReg;
+  }
+}
+```
+
+[코드 히스토리](https://github.com/bohyemian/js-homework/commit/fb382a16e074edb68bcad138a19a5731fe7dd4da)
+
+반환하는 함수를 공통으로 사용하기 위해 `setInputValidation()` 함수 내부에 이벤트 핸들러에서 `target의 type`을 인수로 받아 콜백 함수를 반환하도록 수정했는데, 입력받은 값도 각각 저장하기 위해 수정이 필요했다.
+
+```javascript
+function setInputValidation() {
+  const inputForm = {
+    email: {
+      value: null,
+      isValid: false,
+      inputValid: emailReg,
+    },
+    password: {
+      value: null,
+      isValid: false,
+      inputValid: pwReg,
+    },
+  };
+
+  function checkValid(inputType) {
+    return inputForm[inputType].inputValid(inputForm[inputType].value);
+  }
+
+  function validation(e) {
+    const input = e.target;
+    const { value, type: inputType } = input;
+
+    inputForm[inputType].value = value;
+    inputForm[inputType].isValid = checkValid(inputType);
+
+    if (inputForm[inputType].isValid) {
+      input.classList.remove('is--invalid');
+    }
+  }
+}
+```
+
+`setInputValidation()` 함수 내에 inputForm 객체로 값과 상태를 저장하였다. 콜백함수(getCallback)를 return 하는 함수 대신 객체 내부에 메서드로 호출할 수 있도록 수정했다.
+이벤트 핸들러의 이름도 getValue(e)에서 validation(e)로 변경했다.  
+값이 바뀔 때마다 바뀐 값을 저장하고, 값이 유효한 범위인지 체크 후 `'is--invalid'` 클래스를 제어하여 사용자에게 알려주었다.
+
+`inputForm[inputType]`가 중복되고 있어서 변수에 담으니 코드가 간결하고 가독성이 높아졌다. ✨
+
+```javascript
+function setInputValidation() {
+  const inputForm = {
+    email: {
+      value: null,
+      isValid: false,
+      validation: emailReg,
+    },
+    password: {
+      value: null,
+      isValid: false,
+      validation: pwReg,
+    },
+  };
+
+  function validation(e) {
+    const target = e.target;
+    const { value, type: inputType } = target;
+    const input = inputForm[inputType];
+
+    input.value = value;
+    input.isValid = input.validation(input.value);
+
+    if (input.isValid) {
+      target.classList.remove('is--invalid');
+    }
+  }
+}
+```
+
+[코드 히스토리](https://github.com/bohyemian/js-homework/blob/030a046be1930b676cd4576b0e19c857ff752c65/mission02/js/main.js)
+
+> 아이디와 비밀번호를 정확히 입력했을 때 welcome 페이지로 넘어갈 수 있도록 코드 로직을 작성합니다.
+
+이제 `정확히 입력했을 때` `welcome 페이지로 넘어갈 수 있도록` 부분이 남았다.
