@@ -126,8 +126,8 @@ function setInputValidation() {
 
   function validation(e) {
     const target = e.target;
-    const { value, type: inputType } = target;
-    const input = inputForm[inputType];
+    const { value, type } = target;
+    const input = inputForm[type];
 
     input.value = value;
     input.isValid = input.validation(value);
