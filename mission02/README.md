@@ -17,9 +17,11 @@
 EventTarget의 `addEventListener()` 메서드의 두번째 인자 `listener`에 이벤트 객체가 넘어오기 때문에 **이벤트 객체의 타겟의 값**을 가져올 수 있다.
 
 값을 가져와서 변수에 저장하는 것까지는 구현을 했지만 `addEventListener()`는 값을 반환하지 않는다.  
-로그인 버튼을 눌렀을 때 저장된 input의 값과 user의 값을 비교해야 하는데, `addEventListener()`에 바인딩 된 함수가 종료되면 함수의 컨텍스트가 사라지기 때문에 내부에 저장된 값을 유지하기 위해 수정이 필요했다.
+로그인 버튼을 눌렀을 때 저장된 input의 값과 user의 값을 비교해야 하는데,  
+ `addEventListener()`에 바인딩 된 함수가 종료되면 함수의 컨텍스트가 사라지기 때문에 내부에 저장된 값을 유지하기 위해 수정이 필요했다.
 
-클로저의 개념을 떠올렸고, 처음엔 이벤트 핸들러에서 함수를 return 시켜봤는데 undefined가 반환되어 MDN 문서를 찾아보니 `addEventListener()` 메서드는 반환값이 없었다.  
+클로저의 개념을 떠올렸고, 처음엔 이벤트 핸들러에서 함수를 return 시켜봤는데 undefined가 반환되어 MDN 문서를 찾아보니  
+`addEventListener()` 메서드는 반환값이 없었다.  
 그렇다면 이미 <u>클로저가 형성</u>되어 함수 내부의 값을 알 수 있는 함수가 이벤트 핸들러가 되어야 했다.
 
 ### 아이디와 비밀번호 각각의 렉시컬 환경을 구성하기 위한 클로저 형성
@@ -100,8 +102,9 @@ function setInputValidation() {
 }
 ```
 
-`setInputValidation()` 함수 내에 inputForm 객체로 값과 상태를 저장하였다.  
-콜백함수(getCallback)를 return 하는 함수 대신 객체 내부에 메서드로 호출할 수 있도록 수정했다. 이벤트 핸들러의 이름도 getValue(e)에서 validation(e)로 변경했다.  
+input 각각의 값 분리를 위해 `setInputValidation()` 함수 내에 inputForm 객체로 값과 상태를 저장하였다.  
+콜백함수(getCallback)를 return 하는 함수 대신 객체 내부에 메서드로 호출할 수 있도록 수정했다.  
+이벤트 핸들러의 이름도 getValue(e)에서 validation(e)로 변경했다.  
 값이 바뀔 때마다 바뀐 값을 저장하고, 값이 유효한 범위인지 체크 후 `'is--invalid'` 클래스를 제어하여 사용자에게 알려주었다.
 
 `inputForm[inputType]`가 중복되고 있어서 변수에 담으니 코드가 간결하고 가독성이 높아졌다. ✨
@@ -142,10 +145,11 @@ function setInputValidation() {
 
 > 아이디와 비밀번호를 정확히 입력했을 때 welcome 페이지로 넘어갈 수 있도록 코드 로직을 작성합니다.
 
-이제 `정확히 입력했을 때` `welcome 페이지로 넘어갈 수 있도록` 부분이 남았다.
+이제 요구사항에서 `정확히 입력했을 때` `welcome 페이지로 넘어갈 수 있도록` 부분이 남았다.
 
 로그인 버튼의 이벤트 핸들러로 `formValidation()` 함수가 실행 되도록 했다.  
-`setInputValidation()` 함수의 클로저 환경인 `getValid()` 함수를 return 했고, `getValid()` 함수는 아이디와 비밀번호의 유효성 검사 결과를 반환하고 있다.  
+`setInputValidation()` 함수의 클로저 환경인 `getValid()` 함수를 return 했고,  
+`getValid()` 함수는 아이디와 비밀번호의 유효성 검사 결과를 반환하고 있다.  
 아이디와 비밀번호 유효성 검사가 각각 true일 때 user의 정보(DB)와 비교하여 일치하면 welcome 페이지로 이동, 그 외의 경우 alert 창을 띄우도록 했다.
 
 로그인 버튼을 누르면 아이디와 비밀번호를 user의 정보와 일치하는지 서버에 요청하는 것을 임의로 `acountValueMath(callback)` 함수로 구현하였다.
@@ -160,7 +164,8 @@ function acountValueMath(callback) {
 return { validation, getValid, acountValueMath };
 ```
 
-클로저 환경으로 보호한 아이디, 비밀번호 값을 내보낼 수 없어서 `acountValueMath(callback)` 함수의 위치를 `setInputValidation()` 함수 내부에 작성하였다.  
+클로저 환경으로 보호한 아이디, 비밀번호 값을 내보낼 수 없어서 `acountValueMath(callback)` 함수의 위치를  
+`setInputValidation()` 함수 내부에 작성하였다.  
 서버와 통신하는 시간을 임의로 구현하기 위해 webAPI setTimeout을 이용해 1초 이내의 시간을 랜덤으로 발생시켰다.  
 서버에 요청한 결과를 콜백 함수로 전달하여, 콜백 함수 내부에서 일치 여부에 따라 액션을 분기하였다.
 
@@ -186,5 +191,4 @@ function success(result) {
 <img src="https://bohyemian.github.io/js-homework/mission02/README/misson2.jpg">
 
 코드를 작성하기 전에 머리속에 중구난방 떠오르는 것들을 정리해보고 나름대로 설계를 하고 그것을 코드로 옮기는 작업이 도움이 많이 되었다.
-
 계획한 대로 구현이 되었을 때 느꼈던 성취감도 기억에 남는다. 텅텅 빈 백지를 받았을 때의 막막함을 어떻게 채워나가야 하는지 조금은 연습이 된 것 같다.
