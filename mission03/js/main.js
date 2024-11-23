@@ -1,5 +1,5 @@
-import { addClass, getNode, removeClass, setAttr } from './../../lib/index.js';
-import { data } from './index.js';
+import { addClass, getNode, getNodes, removeClass, setAttr } from './../../lib/index.js';
+import { data } from './data.js';
 
 /*
 1. 클릭 이벤트 활성화
@@ -8,6 +8,8 @@ import { data } from './index.js';
 4. 텍스트 변경
 5. 함수 분리
 */
+
+/* global AudioPlayer */
 
 const nav = document.querySelector('.nav');
 const status = 200;
@@ -28,6 +30,23 @@ new Promise((resolve, reject) => {
     throw new Error(err.message);
   });
 
+function createAudio() {
+  const characterImg = getNodes('.nav li img');
+
+  if (!characterImg.length) return;
+
+  return new Promise((resolve) => {
+    const audio = [...characterImg].map((character) => {
+      const name = character.src.split('/').at(-1).split('.')[0];
+      const url = `./assets/audio/${name}.m4a`;
+
+      return new AudioPlayer(url);
+    });
+
+    resolve(audio);
+  });
+}
+
 function setTextContent(target, txt) {
   if (typeof target === 'string') target = getNode(target);
 
@@ -37,8 +56,9 @@ function setTextContent(target, txt) {
 }
 
 function handleVisualChange(e) {
+  const nickName = getNode('.nickName');
   const visual = getNode('.visual img');
-  const nav = e.target.closest('.nav');
+  const nav = this;
   const navLi = nav.querySelectorAll('li');
   const targetLi = e.target.closest('li');
 
@@ -57,10 +77,20 @@ function handleVisualChange(e) {
     const body = getNode('body');
     const { color, name, alt } = nav.data[index];
 
-    setTextContent('.nickName', name);
+    setTextContent(nickName, name);
     setAttr(visual, 'alt', alt);
-    setAttr(body, 'style', `background: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
+    setAttr(body, 'style', `background-image: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
+  }
+
+  if (nav.audioList) {
+    const audio = nav.audioList[index];
+    nav.audioList.forEach((audio) => audio.stop());
+    audio.play();
   }
 }
+
+createAudio().then((res) => {
+  nav.audioList = res;
+});
 
 nav.addEventListener('click', handleVisualChange);
