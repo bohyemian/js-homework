@@ -72,7 +72,7 @@ btnAudio.addEventListener('click', handleSoundPlay);
 
 ### data 통신 실패 결과
 
-<img src="https://bohyemian.github.io/js-homework/mission03/README/mission03_error.webp">
+<img src="https://bohyemian.github.io/js-homework/mission03/README/mission03_no_data.webp">
 data를 가져오지 못하더라도 이미지와 alt값, 타이틀이 변경되도록 했다.
 
 ## 문제점
