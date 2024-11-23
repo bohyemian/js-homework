@@ -1,4 +1,4 @@
-import { getNode } from './../../lib/index.js';
+import { addClass, getNode, removeClass, setAttr } from './../../lib/index.js';
 import { data } from './index.js';
 
 /*
@@ -22,42 +22,45 @@ new Promise((resolve, reject) => {
   }
 })
   .then((res) => {
-    console.log(res);
+    nav.data = res;
   })
   .catch((err) => {
     throw new Error(err.message);
   });
 
-function removeClass(target) {
-  target.classList.remove('is-active');
-}
-
-function changeHeading(target, txt) {
+function setTextContent(target, txt) {
   if (typeof target === 'string') target = getNode(target);
 
-  target.textcontent = txt;
-}
-
-function changeImage(target, url, alt) {
-  if (typeof target === 'string') target = getNode(target);
-
-  target.src = url;
-  target.alt = alt;
+  if (typeof txt === 'string') {
+    target.textContent = txt;
+  }
 }
 
 function handleVisualChange(e) {
+  const visual = getNode('.visual img');
   const nav = e.target.closest('.nav');
   const navLi = nav.querySelectorAll('li');
   const targetLi = e.target.closest('li');
 
   if (!targetLi) return;
 
-  const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', targetLi);
-  const index = targetLi.dataset.index;
+  // const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target);
+  const targetImg = e.target.nodeName === 'IMG' ? e.target : e.target.querySelector('img');
+  const index = targetLi.dataset.index - 1;
 
-  navLi.forEach(removeClass);
-  targetLi.classList.add('is-active');
-  changeImage('.visual img', targetImg.src, targetImg.alt);
+  navLi.forEach((li) => removeClass(li, 'is-active'));
+  addClass(targetLi, 'is-active');
+  setAttr(visual, 'src', targetImg.src);
+  setAttr(visual, 'alt', targetImg.alt);
+
+  if (nav.data) {
+    const body = getNode('body');
+    const { color, name, alt } = nav.data[index];
+
+    setTextContent('.nickName', name);
+    setAttr(visual, 'alt', alt);
+    setAttr(body, 'style', `background: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
+  }
 }
 
 nav.addEventListener('click', handleVisualChange);
