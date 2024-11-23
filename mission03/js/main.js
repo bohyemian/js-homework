@@ -11,7 +11,8 @@ import { data } from './data.js';
 
 /* global AudioPlayer */
 
-const nav = document.querySelector('.nav');
+const nav = getNode('.nav');
+const btnAudio = getNode('.btn-audio-paly');
 const status = 200;
 
 new Promise((resolve, reject) => {
@@ -57,6 +58,7 @@ function setTextContent(target, txt) {
 
 function handleVisualChange(e) {
   const nickName = getNode('.nickName');
+  const btnSound = getNode('.btn-audio-paly');
   const visual = getNode('.visual img');
   const nav = this;
   const navLi = nav.querySelectorAll('li');
@@ -78,19 +80,23 @@ function handleVisualChange(e) {
     const { color, name, alt } = nav.data[index];
 
     setTextContent(nickName, name);
+    setAttr(btnSound, 'data-active', index);
     setAttr(visual, 'alt', alt);
     setAttr(body, 'style', `background-image: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
   }
+}
 
-  if (nav.audioList) {
-    const audio = nav.audioList[index];
-    nav.audioList.forEach((audio) => audio.stop());
-    audio.play();
+function handleSoundPlay(e) {
+  const index = +e.currentTarget.dataset.active || 0;
+  const { audioList } = nav;
+
+  if (audioList) {
+    audioList.forEach((audio) => audio.stop());
+    audioList[index].play();
   }
 }
 
-createAudio().then((res) => {
-  nav.audioList = res;
-});
+createAudio().then((res) => (nav.audioList = res));
 
+btnAudio.addEventListener('click', handleSoundPlay);
 nav.addEventListener('click', handleVisualChange);
