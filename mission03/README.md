@@ -20,12 +20,12 @@ nav.addEventListener('click', handleVisualChange);
 
 `nav.nav > ul> li > img` 구조에서 `.nav`를 선택자로 이벤트를 한번 바인딩하여 이벤트 동작의 버블링을 활용한 이벤트 위임을 적용하여 성능 최적화 하였다.
 
-조건문을 사용하여 `nav.data` data 속성이 undefined가 아닌 경우 data의 값을 사용하여 변경할 수 있도록 했고,  
+조건문을 사용하여 `nav.data` 속성이 undefined가 아닌 경우 data의 값을 사용하여 변경할 수 있도록 했고,  
 data가 없더라도 클릭 시 이미지와 alt값, 타이틀의 텍스트가 변경될 수 있도록 했다.
 
 ## 오디오 재생
 
-`.map()`을 사용하여 AudioPlayer의 인스턴스 목록을 반환하도록 했는데, 콘손로 찍어보니 undefined가 나왔다.
+`.map()`을 사용하여 AudioPlayer의 인스턴스 목록을 반환하도록 했는데, 콘솔로 찍어보니 undefined가 나왔다.
 작업을 처리하는데 시간이 소요되는 것 같아서 Promise를 사용하여 처리가 끝나면 결과를 받아, `nav.data` 속성으로 등록한 것처럼 `nav.audioList` 속성으로 넣어 주었다.
 
 ```javascript
