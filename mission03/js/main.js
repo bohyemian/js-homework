@@ -86,8 +86,8 @@ function handleVisualChange(e) {
     return;
   }
 
-  setNameText(nickName, String(targetImg.src.split('/').at(-1).split('.')[0]).toUpperCase());
   setImage(visual, targetImg.src, targetImg.alt);
+  setNameText(nickName, String(targetImg.src.split('/').at(-1).split('.')[0]).toUpperCase());
 }
 
 function createAudio() {
