@@ -77,17 +77,16 @@ function handleVisualChange(e) {
   if (nav.data) {
     const body = getNode('body');
     const { color, name, alt } = nav.data[index];
-
     setNameText(nickName, name);
     setAttr(btnSound, 'data-active', index);
-    setImage(visual, `./assets/${name}.jpeg`, alt);
+    setImage(visual, `./assets/${name.toLowerCase()}.jpeg`, alt);
     setBgColor(body, color);
 
     return;
   }
 
-  setImage(visual, targetImg.src, targetImg.alt);
   setNameText(nickName, String(targetImg.src.split('/').at(-1).split('.')[0]).toUpperCase());
+  setImage(visual, targetImg.src, targetImg.alt);
 }
 
 function createAudio() {
