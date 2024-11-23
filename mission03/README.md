@@ -66,6 +66,10 @@ function handleSoundPlay(e) {
 btnAudio.addEventListener('click', handleSoundPlay);
 ```
 
+## 결과
+
+<img src="https://bohyemian.github.io/js-homework/mission03/README/mission03.webp">
+
 ## 문제점
 
 - background 색상이 변경될 때 transition 속성이 있음에도 적용이 되지 않았다.
