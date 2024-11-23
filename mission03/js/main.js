@@ -31,28 +31,29 @@ new Promise((resolve, reject) => {
     throw new Error(err.message);
   });
 
-function createAudio() {
-  const characterImg = getNodes('.nav li img');
-
-  if (!characterImg.length) return;
-
-  return new Promise((resolve) => {
-    const audio = [...characterImg].map((character) => {
-      const name = character.src.split('/').at(-1).split('.')[0];
-      const url = `./assets/audio/${name}.m4a`;
-
-      return new AudioPlayer(url);
-    });
-
-    resolve(audio);
-  });
-}
-
-function setTextContent(target, txt) {
+function setNameText(target, txt) {
   if (typeof target === 'string') target = getNode(target);
 
   if (typeof txt === 'string') {
     target.textContent = txt;
+  }
+}
+
+function setImage(target, url, alt) {
+  if (url !== 'undefiend') setAttr(target, 'src', url);
+  if (alt !== 'undefiend') setAttr(target, 'alt', alt);
+}
+
+function setBgColor(target, ...color) {
+  if (!color.length) return;
+  if (typeof target === 'string') target = getNode(target);
+
+  [color] = color;
+
+  if (typeof color === 'string') {
+    setAttr(target, 'style', `background-color: ${color}`);
+  } else if (color.length >= 2) {
+    setAttr(target, 'style', `background-image: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
   }
 }
 
@@ -72,18 +73,38 @@ function handleVisualChange(e) {
 
   navLi.forEach((li) => removeClass(li, 'is-active'));
   addClass(targetLi, 'is-active');
-  setAttr(visual, 'src', targetImg.src);
-  setAttr(visual, 'alt', targetImg.alt);
 
   if (nav.data) {
     const body = getNode('body');
     const { color, name, alt } = nav.data[index];
 
-    setTextContent(nickName, name);
+    setNameText(nickName, name);
     setAttr(btnSound, 'data-active', index);
-    setAttr(visual, 'alt', alt);
-    setAttr(body, 'style', `background-image: linear-gradient(to bottom, ${color[0]}, ${color[1]})`);
+    setImage(visual, `./assets/${name}.jpeg`, alt);
+    setBgColor(body, color);
+
+    return;
   }
+
+  setNameText(nickName, String(targetImg.src.split('/').at(-1).split('.')[0]).toUpperCase());
+  setImage(visual, targetImg.src, targetImg.alt);
+}
+
+function createAudio() {
+  const characterImg = getNodes('.nav li img');
+
+  if (!characterImg.length) return;
+
+  return new Promise((resolve) => {
+    const audio = [...characterImg].map((character) => {
+      const name = character.src.split('/').at(-1).split('.')[0];
+      const url = `./assets/audio/${name}.m4a`;
+
+      return new AudioPlayer(url);
+    });
+
+    resolve(audio);
+  });
 }
 
 function handleSoundPlay(e) {
