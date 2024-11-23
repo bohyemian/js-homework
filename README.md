@@ -11,3 +11,8 @@
 - [js 바로가기](https://github.com/bohyemian/js-homework/blob/main/mission02/js/main.js)
 - [화면 보기](https://bohyemian.github.io/js-homework/mission02/)
 - [README](https://github.com/bohyemian/js-homework/blob/main/mission02/README.md)
+
+## mission03 포스터 교체
+
+- [js 바로가기](https://github.com/bohyemian/js-homework/blob/main/mission03/js/main.js)
+- [화면 보기](https://bohyemian.github.io/js-homework/mission03/)

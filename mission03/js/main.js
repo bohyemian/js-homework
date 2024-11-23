@@ -1,4 +1,4 @@
-import { getNode, getNodes } from './../../lib/index.js';
+import { getNode } from './../../lib/index.js';
 import { data } from './index.js';
 
 /*
@@ -12,7 +12,7 @@ import { data } from './index.js';
 const nav = document.querySelector('.nav');
 const status = 200;
 
-const getDataArray = new Promise((resolve, reject) => {
+new Promise((resolve, reject) => {
   if (status >= 200 && status < 400) {
     setTimeout(() => {
       resolve(data);
@@ -52,7 +52,7 @@ function handleVisualChange(e) {
 
   if (!targetLi) return;
 
-  const targetImg = getNode('img');
+  const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', targetLi);
   const index = targetLi.dataset.index;
 
   navLi.forEach(removeClass);
