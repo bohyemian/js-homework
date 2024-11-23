@@ -52,7 +52,7 @@ function setInputValidation() {
     const input = inputForm[type];
 
     input.value = value;
-    input.isValid = input.validation(input.value);
+    input.isValid = input.validation(value);
 
     if (input.isValid) {
       target.classList.remove('is--invalid');
