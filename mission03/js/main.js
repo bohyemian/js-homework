@@ -1,4 +1,4 @@
-import { addClass, getNode, getNodes, removeClass, setAttr } from './../../lib/index.js';
+import { getNode, getNodes, addClass, removeClass, setAttr } from './../../lib/index.js';
 import { data } from './data.js';
 
 /*
@@ -77,6 +77,7 @@ function handleVisualChange(e) {
   if (nav.data) {
     const body = getNode('body');
     const { color, name, alt } = nav.data[index];
+
     setNameText(nickName, name);
     setAttr(btnSound, 'data-active', index);
     setImage(visual, `./assets/${name.toLowerCase()}.jpeg`, alt);
