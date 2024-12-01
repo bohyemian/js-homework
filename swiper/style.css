@@ -72,6 +72,7 @@ html {
 }
 
 body {
+  block-size: 100dvh;
   background: #ddd;
 }
 
@@ -101,7 +102,11 @@ body {
 }
 
 .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-inline-size: 480px;
+  block-size: inherit;
   padding-inline-end: 35px;
   padding-block: 5rem;
 }
@@ -169,8 +174,8 @@ body {
       inset-block-start: 100%;
       min-inline-size: 60px;
       height: 60px;
-      background: url(./assets/santa.png) 10px 50% / 40px auto no-repeat;
-      box-shadow: 0 0 8px 0px #b5b5b5;
+      background: #fdfdfd url(./assets/santa.png) 10px 50% / 40px auto no-repeat;
+      box-shadow: 0 0 8px 0px #d3c6aa;
       border-radius: 12px;
       z-index: 1;
       cursor: pointer;
@@ -185,4 +190,38 @@ body {
       }
     }
   }
+
+  &.postcard {
+    background: url(./assets/postcard.png) 50% / cover no-repeat;
+  }
+
+  [class*=ani-] {
+    opacity: 0;
+    translate: 0 -20px;
+  }
+
+  &.swiper-slide-active {
+    [class*=ani-] {
+      opacity: 1;
+      translate: 0 0;
+      transition: opacity .6s cubic-bezier(0.26, 0.52, 0.44, 0.98), translate .6s cubic-bezier(0.26, 0.52, 0.44, 0.98);
+    }
+
+    .ani-1 {
+      transition-delay: .3s
+    }
+
+    .ani-2 {
+      transition-delay: .6s
+    }
+
+    .ani-3 {
+      transition-delay: .9s
+    }
+
+  }
+}
+
+img[src*=kkang] {
+  max-inline-size: 125px;
 }
