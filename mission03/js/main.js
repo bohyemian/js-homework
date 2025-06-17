@@ -62,7 +62,7 @@ function handleVisualChange(e) {
   const btnSound = getNode('.btn-audio-paly');
   const visual = getNode('.visual img');
   const nav = this;
-  const navLi = nav.querySelectorAll('li');
+  const navLi = getNodes('li', 'nav.nav');
   const targetLi = e.target.closest('li');
 
   if (!targetLi) return;
