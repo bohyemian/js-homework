@@ -78,14 +78,15 @@ data를 가져오지 못하더라도 이미지와 alt값, 타이틀이 변경되
 ## 문제점
 
 - background 색상이 변경될 때 transition 속성이 있음에도 적용이 되지 않았다.
-- `handleVisualChange` 함수에서 nav 내의 모든 li를 노드로 선택하기 위해 `getNodes('li', nav)`로 작성했는데 에러가 나서 선택자가 짝짝이가 되었다. 😭
+- <del>`handleVisualChange` 함수에서 nav 내의 모든 li를 노드로 선택하기 위해 `getNodes('li', nav)`로 작성했는데 에러가 나서 선택자가 짝짝이가 되었다.</del> 😭
+→ getNode 인자로 태그명을 받게 되어 있는데 node를 전달하여 발생한 에러였다.
 
 ```javascript
 const nav = this;
 const navLi = nav.querySelectorAll('li');
 
-// const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target);
-const targetImg = e.target.nodeName === 'IMG' ? e.target : e.target.querySelector('img');
+// const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target); //수정 전. 에러나던 코드
+const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target.nodeName.toLowerCase()); //수정 후. node명 전달
 ```
 
 ## 마치며
