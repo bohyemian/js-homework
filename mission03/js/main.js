@@ -67,8 +67,7 @@ function handleVisualChange(e) {
 
   if (!targetLi) return;
 
-  // const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target);
-  const targetImg = e.target.nodeName === 'IMG' ? e.target : e.target.querySelector('img');
+  const targetImg = e.target.nodeName === 'IMG' ? e.target : getNode('img', e.target.nodeName.toLowerCase());
   const index = targetLi.dataset.index - 1;
 
   navLi.forEach((li) => removeClass(li, 'is-active'));
